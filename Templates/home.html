@@ -1,16 +1,90 @@
-<h1> 네이버 책 검색 API</h1>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>BOOKLOG - *</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+  <h1>BOOKLOG</h1>
+    <form action="{% url 'book:api_search' %}" method="GET" class="form-inline">
+      <input class="form-control mr-sm-2" type="text" name="q">
+      <button class="btn btn-info my-2 my-sm-0" type="submit">책찾기</button>
+    </form>
 
-  <form action="{% url 'book:api_search' %}" method="GET">
-      <input type="text" name="q" placeholder="검색">
-      <input type="submit" value="검색">
-  </form>
+
+
   <div>
   {% for item in items %}
       <ul>
-          <div>
-            <img src="{{item.image}}" alt="" width="110" height="150">
-            {{ item.title|safe }} | {{item.author|safe }} | {{ item.publisher|safe }} | {{ item.pubdate }}
-          </div>
+        <div>
+          <img src="{{ item.image }}" alt="" width="110" height="150">
+            <a data-toggle="modal" data-title="{{ item.title }}" data-author="{{ item.author }}" data-publisher="{{ item.publisher }}" data-pubdate="{{ item.pubdate }}" title="{{ item.title }}" class="open-AddBookDialog" href="#addBookDialog">{{ item.title|safe }}</a> | {{item.author|safe }} | {{ item.publisher|safe }} | {{ item.pubdate }}
+        </div>
       </ul>
   {% endfor %}
   </div>
+</div>
+</body>
+<div class="modal" id="addBookDialog" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">감상평 남기기</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="title">제목</label>
+            <input type="text" name="title" id="title" class="form-control-plaintext" value=""/>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="author">작가</label>
+            <input type="text" name="author" id="author" class="form-control-plaintext" value=""/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="publisher">출판사</label>
+            <input type="text" name="publisher" id="publisher" class="form-control-plaintext" value=""/>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="pubdate">출간일</label>
+            <input type="text" name="pubdate" id="pubdate" class="form-control-plaintext" value=""/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="review">감상평</label>
+          <textarea class="form-control" id="review" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  $(document).on("click", ".open-AddBookDialog", function () {
+       var booktitle = $(this).data('title');
+       var bookauthor = $(this).data('author');
+       var bookpublisher = $(this).data('publisher');
+       var bookpubdate = $(this).data('pubdate');
+       $(".modal-body #title").val( booktitle );
+       $(".modal-body #author").val( bookauthor );
+       $(".modal-body #publisher").val( bookpublisher );
+       $(".modal-body #pubdate").val( bookpubdate );
+       // As pointed out in comments,
+       // it is unnecessary to have to manually call the modal.
+       // $('#addBookDialog').modal('show');
+  });
+</script>
+</html>

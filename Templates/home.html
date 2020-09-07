@@ -40,7 +40,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="form-row">
+      <form method="POST" action="{% url 'post:savePost' %}">
+          {% csrf_token %}
+        <div class="form-row" method="POST">
           <div class="form-group col-md-6">
             <label for="title">제목</label>
             <input type="text" name="title" id="title" class="form-control-plaintext" value=""/>
@@ -62,13 +64,14 @@
         </div>
         <div class="form-group">
           <label for="review">감상평</label>
-          <textarea class="form-control" id="review" rows="3"></textarea>
+          <textarea class="form-control" name="review" id="review" rows="7" required></textarea>
           </div>
         </div>
         <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary">저장</button>
+        <button type="submit" method="POST" action="{% url 'post:savePost' %}"class="btn btn-primary" id="save">저장</button>
         </div>
+      </form>
       </div>
     </div>
   </div>

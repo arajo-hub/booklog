@@ -57,7 +57,7 @@
           </div>
           <div class="form-group col-md-6">
             <label for="pubdate">출간일</label>
-            <input type="text" name="pubdate" id="pubdate" class="form-control-plaintext" value=""/>
+            <input type="date" readonly name="pubdate" id="pubdate" class="form-control-plaintext" value=""/>
           </div>
         </div>
         <div class="form-group">
@@ -78,10 +78,26 @@
        var bookauthor = $(this).data('author');
        var bookpublisher = $(this).data('publisher');
        var bookpubdate = $(this).data('pubdate');
-       $(".modal-body #title").val( booktitle );
-       $(".modal-body #author").val( bookauthor );
-       $(".modal-body #publisher").val( bookpublisher );
-       $(".modal-body #pubdate").val( bookpubdate );
+       // 날짜형식으로 표시되도록 수정
+       var y = String(bookpubdate).substr(0, 4);
+       var m = String(bookpubdate).substr(4, 2);
+       var d = String(bookpubdate).substr(6, 2);
+       var formatteddate = new Date(y, m-1, d);
+       var year=formatteddate.getFullYear();
+       var day=''+formatteddate.getDate();
+       var month=''+(formatteddate.getMonth()+1);
+       if (month.length<2) month='0'+month;
+       if (day.length<2) day='0'+day;
+       var newpubdate=[year, month, day].join('-');
+       // 검색어 강조 없애기(책제목, 작가, 출판사)
+       var newbooktitle=booktitle.replace(/(<([^>]+)>)/ig,"");
+       var newbookauthor=bookauthor.replace(/(<([^>]+)>)/ig,"");
+       var newbookpublisher=bookpublisher.replace(/(<([^>]+)>)/ig,"");
+       // 날짜 바꿀 수 없게 고정
+       $(".modal-body #title").val( newbooktitle );
+       $(".modal-body #author").val( newbookauthor );
+       $(".modal-body #publisher").val( newbookpublisher );
+       $(".modal-body #pubdate").val( newpubdate);
        // As pointed out in comments,
        // it is unnecessary to have to manually call the modal.
        // $('#addBookDialog').modal('show');

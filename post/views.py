@@ -1,18 +1,17 @@
 from django.shortcuts import render
+from .models import Post
 
 def save(request):
     if request.method == "POST":
-        title = request.POST.get('title')
-        author = request.POST.get('author')
-        publisher=request.POST.get('publisher')
-        pubdate=request.POST.get('pubdate')
-        review=request.POST.get('review')
-        context = {
-            'title' : title,
-            'author' : author,
-            'publisher' : publisher,
-            'pubdate' : pubdate,
-            'review' : review,
-        }
-        print(context)
-        return render(request, 'home.html', context=context)
+        post=Post.objects.all()
+        context={'Post' : post}
+        try :
+            post=Post(title=request.POST['title'],
+            author=request.POST['author'],
+            publisher=request.POST['publisher'],
+            pubdate=request.POST['pubdate'],
+            review=request.POST['review'])
+            post.save()
+        except:
+            post=None
+        return render(request, 'home.html', context)

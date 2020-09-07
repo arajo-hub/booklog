@@ -1,4 +1,5 @@
 from django.db import models
+from booklog import settings
 
 class Post(models.Model):
     title=models.CharField(max_length=255)

@@ -5,5 +5,6 @@ from post import views
 app_name='post'
 
 urlpatterns = [
-    path('', views.save, name='savePost'),
+    path('new/', views.save, name='savePost'),
+    path('', views.PostList.as_view(), name='all'),
 ]

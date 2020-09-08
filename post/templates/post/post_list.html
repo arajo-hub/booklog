@@ -1,0 +1,13 @@
+<div class="container">
+  <h3>{{ user.username }}님의 감상평</h3>
+  <ul class='nav navbar-nav'>
+    <li class='navar-link'><a class="nav-link navitem" href="{% url 'index' %}">홈으로</a></li>
+    <li class='navar-link'><a class="nav-link navitem" href="{% url 'account:logout' %}">Log Out</a></li>
+  </ul>
+  {% for post in post_list %}
+    <h5>* * *</h5>
+    <h3>{{ post.title }}</h3>
+    <h5>{{ post.author }} | {{ post.publisher}} | {{ post.pubdate|date:"Y-m-d" }}</h5>
+    <h4>{{ post.review }}</h4>
+  {% endfor %}
+</div>

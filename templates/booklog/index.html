@@ -3,22 +3,31 @@
 <head>
   <meta charset="utf-8">
   <title>BOOKLOG - *</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="container">
-  <h1>BOOKLOG</h1>
+    <h1>BOOKLOG</h1>
+    <ul class='nav navbar-nav'>
+    {% if user.is_authenticated %}
+      <li class='navar-item'><a class="nav-link">안녕하세요, {{ user.username }}님!</a></li>
+      <li class='navar-link'><a class="nav-link navitem" href="{% url 'post:all' %}">내 감상평 보기</a></li>
+      <li class='navar-link'><a class="nav-link navitem" href="{% url 'account:logout' %}">Log Out</a></li>
+    {% else %}
+      <li class='navar-link'><a class="nav-link navitem" href="{% url 'account:login' %}">Login</a></li>
+      <li class='navar-link'><a class="nav-link navitem" href="{% url 'account:signup' %}">Sign Up</a></li>
+    {% endif %}
+    </ul>
+
     <form action="{% url 'book:api_search' %}" method="GET" class="form-inline">
       <input class="form-control mr-sm-2" type="text" name="q">
       <button class="btn btn-info my-2 my-sm-0" type="submit">책찾기</button>
     </form>
 
-
-
-  <div>
+<div>
   {% for item in items %}
       <ul>
         <div>
@@ -75,6 +84,7 @@
       </div>
     </div>
   </div>
+</div>
 <script>
   $(document).on("click", ".open-AddBookDialog", function () {
        var booktitle = $(this).data('title');

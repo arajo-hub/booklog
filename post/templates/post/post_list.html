@@ -1,13 +1,84 @@
-<div class="container">
-  <h3>{{ user.username }}님의 감상평</h3>
-  <ul class='nav navbar-nav'>
-    <li class='navar-link'><a class="nav-link navitem" href="{% url 'index' %}">홈으로</a></li>
-    <li class='navar-link'><a class="nav-link navitem" href="{% url 'account:logout' %}">Log Out</a></li>
-  </ul>
-  {% for post in post_list %}
-    <h5>* * *</h5>
-    <h3>{{ post.title }}</h3>
-    <h5>{{ post.author }} | {{ post.publisher}} | {{ post.pubdate|date:"Y-m-d" }}</h5>
-    <h4>{{ post.review }}</h4>
-  {% endfor %}
-</div>
+{% extends 'booklog/index.html' %}
+{% block content %}
+  <h3 class="listtitle">{{ user.username }}님의 감상평</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">책제목</th>
+        <th scope="col">작가</th>
+        <th scope="col">출판사</th>
+        <th scope="col">감상평<th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for post in post_list %}
+      <tr>
+        <td><a data-toggle="modal" data-title="{{ post.title }}" data-author="{{ post.author }}" data-publisher="{{ post.publisher }}" data-pubdate="{{ post.pubdate|date:'Y-m-d' }}" data-review="{{ post.review }}" class="postdetail" href="#postdetail">{{ post.title }}</td>
+        <td>{{ post.author }}</td>
+        <td>{{ post.publisher}}</td>
+        <td>{{ post.review|truncatechars:50 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="modal" id="postdetail" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">감상평</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <form method="POST" action="{% url 'post:editPost' %}">
+            {% csrf_token %}
+          <div class="form-row" method="POST">
+            <div class="form-group col-md-6">
+              <label for="title">제목</label>
+              <input type="text" name="title" id="title" class="form-control-plaintext" value=""/>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="author">작가</label>
+              <input type="text" name="author" id="author" class="form-control-plaintext" value=""/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="publisher">출판사</label>
+              <input type="text" name="publisher" id="publisher" class="form-control-plaintext" value=""/>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="pubdate">출간일</label>
+              <input type="date" readonly name="pubdate" id="pubdate" class="form-control-plaintext" value=""/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="review">감상평</label>
+            <textarea class="form-control" name="review" id="review" rows="7" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+          <button type="submit" method="POST" action="{% url 'post:savePost' %}"class="btn btn-primary" id="save">수정</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  <script>
+    $(document).on("click", ".postdetail", function () {
+      var booktitle = $(this).data('title');
+      var bookauthor = $(this).data('author');
+      var bookpublisher = $(this).data('publisher');
+      var bookreview = $(this).data('review');
+      var bookpubdate =  $(this).data('pubdate');
+
+      $(".modal-body #title").val( booktitle );
+      $(".modal-body #author").val( bookauthor );
+      $(".modal-body #publisher").val( bookpublisher );
+      $(".modal-body #review").val( bookreview );
+      $(".modal-body #pubdate").val( bookpubdate );
+    });
+  </script>
+{% endblock %}

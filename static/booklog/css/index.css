@@ -1,0 +1,19 @@
+.headtitle{
+  margin-top:40px;
+  margin-bottom:40px;
+  font-size:40px;
+  color:#cc8b79;
+}
+
+.headtitle:hover{
+  color:#432371;
+  text-decoration: none;
+}
+.searchform {
+  justify-content:flex-end;
+  padding-bottom:70px;
+}
+
+.listtitle{
+  padding-bottom:30px;
+}

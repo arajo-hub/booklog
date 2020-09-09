@@ -1,0 +1,90 @@
+{% extends 'booklog/index.html' %}
+{% block content %}
+<div>
+  {% for item in items %}
+      <ul>
+        <div>
+          <img src="{{ item.image }}" alt="" width="110" height="150">
+            <a data-toggle="modal" data-title="{{ item.title }}" data-author="{{ item.author }}" data-publisher="{{ item.publisher }}" data-pubdate="{{ item.pubdate }}" class="open-AddBookDialog" href="#addBookDialog">{{ item.title|safe }}</a> | {{item.author|safe }} | {{ item.publisher|safe }} | {{ item.pubdate }}
+        </div>
+      </ul>
+  {% endfor %}
+</div>
+<div class="modal" id="addBookDialog" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">감상평 남기기</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="POST" action="{% url 'post:savePost' %}">
+          {% csrf_token %}
+        <div class="form-row" method="POST">
+          <div class="form-group col-md-6">
+            <label for="title">제목</label>
+            <input type="text" name="title" id="title" class="form-control-plaintext" value=""/>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="author">작가</label>
+            <input type="text" name="author" id="author" class="form-control-plaintext" value=""/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="publisher">출판사</label>
+            <input type="text" name="publisher" id="publisher" class="form-control-plaintext" value=""/>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="pubdate">출간일</label>
+            <input type="date" readonly name="pubdate" id="pubdate" class="form-control-plaintext" value=""/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="review">감상평</label>
+          <textarea class="form-control" name="review" id="review" rows="7" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="submit" method="POST" action="{% url 'post:savePost' %}"class="btn btn-primary" id="save">저장</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+<script>
+  $(document).on("click", ".open-AddBookDialog", function () {
+       var booktitle = $(this).data('title');
+       var bookauthor = $(this).data('author');
+       var bookpublisher = $(this).data('publisher');
+       var bookpubdate = $(this).data('pubdate');
+       var bookpk = $(this).data('pk');
+       // 날짜형식으로 표시되도록 수정
+       var y = String(bookpubdate).substr(0, 4);
+       var m = String(bookpubdate).substr(4, 2);
+       var d = String(bookpubdate).substr(6, 2);
+       var formatteddate = new Date(y, m-1, d);
+       var year=formatteddate.getFullYear();
+       var day=''+formatteddate.getDate();
+       var month=''+(formatteddate.getMonth()+1);
+       if (month.length<2) month='0'+month;
+       if (day.length<2) day='0'+day;
+       var newpubdate=[year, month, day].join('-');
+       // 검색어 강조 없애기(책제목, 작가, 출판사)
+       var newbooktitle=booktitle.replace(/(<([^>]+)>)/ig,"");
+       var newbookauthor=bookauthor.replace(/(<([^>]+)>)/ig,"");
+       var newbookpublisher=bookpublisher.replace(/(<([^>]+)>)/ig,"");
+       // 날짜 바꿀 수 없게 고정
+       $(".modal-body #title").val( newbooktitle );
+       $(".modal-body #author").val( newbookauthor );
+       $(".modal-body #publisher").val( newbookpublisher );
+       $(".modal-body #pubdate").val( newpubdate);
+       // As pointed out in comments,
+       // it is unnecessary to have to manually call the modal.
+       // $('#addBookDialog').modal('show');
+  });
+</script>
+{% endblock %}

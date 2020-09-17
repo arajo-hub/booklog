@@ -9,11 +9,28 @@
   color:#432371;
   text-decoration: none;
 }
+
 .searchform {
   justify-content:flex-end;
   padding-bottom:70px;
+  margin-top:-45px;
+}
+
+.pagination {
+  justify-content: center;
+  margin-top:70px;
+  margin-bottom:100px;
 }
 
 .listtitle{
   padding-bottom:30px;
+}
+
+.buttonset{
+  text-align:center;
+  margin-bottom:100px;
+}
+
+.deleteconfirm{
+  text-align:center;
 }

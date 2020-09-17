@@ -19,6 +19,7 @@ class signupView(CreateView):
     verify_url=reverse_lazy('verify')
     template_name='account/signup.html'
     email_template_name='account/registration_verification.html'
+    context_object_name='User'
     token_generator=default_token_generator
 
     def form_valid(self, form):

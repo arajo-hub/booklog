@@ -1,0 +1,34 @@
+{% extends 'booklog/index.html' %}
+{% block content %}
+<div class="jumbotron">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="title">제목</label>
+      <input type="text" name="title" id="title" class="form-control-plaintext" value="{{ post.title }}"/>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="author">작가</label>
+      <input type="text" name="author" id="author" class="form-control-plaintext" value="{{ post.author }}"/>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="publisher">출판사</label>
+      <input type="text" name="publisher" id="publisher" class="form-control-plaintext" value="{{ post.publisher }}"/>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="pubdate">출간일</label>
+      <input type="date" readonly name="pubdate" id="pubdate" class="form-control-plaintext" value="{{ post.pubdate|date:'Y-m-d' }}"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="review">감상평</label>
+    <textarea class="form-control-plaintext" name="review" id="review" rows="7">{{ post.review }}</textarea>
+  </div>
+</div>
+<div class="container buttonset">
+<button type="button" class="btn btn-secondary" onclick="location.href={% url 'post:all' %}">취소</button>
+<a href="{% url 'post:edit' username=post.user.username pk=post.pk %}"><button type="button" class="btn btn-info">수정</button></a>
+<a href="{% url 'post:delete' username=post.user.username pk=post.pk %}"><button type="button" class="btn btn-danger">삭제</button></a>
+</div>
+{% endblock %}

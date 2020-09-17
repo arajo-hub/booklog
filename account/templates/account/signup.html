@@ -2,7 +2,9 @@
 {% block content %}
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="Login">
+  <div class="jumbotron">
+    {{ form.as_p }}
+    <input type="submit" class='btn btn-info' value="가입하기">
+  </div>
 </form>
 {% endblock %}

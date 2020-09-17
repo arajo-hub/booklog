@@ -13,7 +13,7 @@
     <tbody>
       {% for post in post_list %}
       <tr>
-        <td><a data-toggle="modal" data-title="{{ post.title }}" data-author="{{ post.author }}" data-publisher="{{ post.publisher }}" data-pubdate="{{ post.pubdate|date:'Y-m-d' }}" data-review="{{ post.review }}" class="postdetail" href="#postdetail">{{ post.title }}</td>
+        <td><a href="{% url 'post:detail' username=post.user.username pk=post.pk %}" data-pk="{{ post.pk }}" data-title="{{ post.title }}" data-author="{{ post.author }}" data-publisher="{{ post.publisher }}" data-pubdate="{{ post.pubdate|date:'Y-m-d' }}" data-review="{{ post.review }}" data-id="{{ post.pk }}" class="postdetail" href="#postdetail">{{ post.title }}</td>
         <td>{{ post.author }}</td>
         <td>{{ post.publisher}}</td>
         <td>{{ post.review|truncatechars:50 }}</td>
@@ -21,64 +21,39 @@
       {% endfor %}
     </tbody>
   </table>
-  <div class="modal" id="postdetail" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">감상평</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-        <form method="POST" action="{% url 'post:editPost' %}">
-            {% csrf_token %}
-          <div class="form-row" method="POST">
-            <div class="form-group col-md-6">
-              <label for="title">제목</label>
-              <input type="text" name="title" id="title" class="form-control-plaintext" value=""/>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="author">작가</label>
-              <input type="text" name="author" id="author" class="form-control-plaintext" value=""/>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="publisher">출판사</label>
-              <input type="text" name="publisher" id="publisher" class="form-control-plaintext" value=""/>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="pubdate">출간일</label>
-              <input type="date" readonly name="pubdate" id="pubdate" class="form-control-plaintext" value=""/>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="review">감상평</label>
-            <textarea class="form-control" name="review" id="review" rows="7" required></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-          <button type="submit" method="POST" action="{% url 'post:savePost' %}"class="btn btn-primary" id="save">수정</button>
-          </div>
-        </form>
-        </div>
-      </div>
-    </div>
-  <script>
-    $(document).on("click", ".postdetail", function () {
-      var booktitle = $(this).data('title');
-      var bookauthor = $(this).data('author');
-      var bookpublisher = $(this).data('publisher');
-      var bookreview = $(this).data('review');
-      var bookpubdate =  $(this).data('pubdate');
 
-      $(".modal-body #title").val( booktitle );
-      $(".modal-body #author").val( bookauthor );
-      $(".modal-body #publisher").val( bookpublisher );
-      $(".modal-body #review").val( bookreview );
-      $(".modal-body #pubdate").val( bookpubdate );
-    });
-  </script>
+  {% if is_paginated %}
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      {% else %}
+      <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+      {% endif %}
+      {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+      {% else %}
+      <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+      {% endif %}
+    </ul>
+{% endif %}
 {% endblock %}

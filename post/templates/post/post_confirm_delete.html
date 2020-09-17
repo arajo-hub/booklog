@@ -1,0 +1,16 @@
+{% extends 'booklog/index.html' %}
+{% block content %}
+<div class="deleteconfirm">
+<p>{{ post.title }}에 대한</p>
+<div class="jumbotron">
+  <p>{{ post.review|truncatechars:50 }}</p>
+</div>
+  <p>감상평을 정말 삭제하시겠어요?</p>
+<form method="post">
+  {% csrf_token %}
+  <div class="buttonset">
+    <a href="{% url 'post:detail' username=post.user.username pk=post.pk %}"><button type="button" class="btn btn-secondary">취소</button></a>
+    <input type="submit" class='btn btn-danger' value="삭제">
+  </div>
+</form>
+{% endblock %}
